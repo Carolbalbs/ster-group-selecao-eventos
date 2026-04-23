@@ -54,6 +54,41 @@ O projeto está organizado por benchmarks e intervalos de tempo:
   - O separador utilizado é o ponto e vírgula (`;`).
   - É obrigatório que os arquivos contenham uma coluna chamada `CYCLES`, que é utilizada como alvo (target) para os cálculos de correlação e impacto.
 
+## ➕ Adicionando Novos Benchmarks
+
+Para incluir novos benchmarks no sistema, siga os passos abaixo:
+
+### 1. Preparação da Estrutura
+Crie uma nova pasta na raiz do projeto com o nome do seu benchmark e organize os arquivos seguindo o padrão:
+```text
+meu_novo_benchmark/
+├── intervalo1/
+│   └── *.csv
+├── intervalo2/
+│   └── *.csv
+└── intervalo3/
+    └── *.csv
+```
+
+### 2. Formatação dos Dados (CSV)
+Certifique-se de que seus arquivos CSV:
+- Utilizam **ponto e vírgula (;)** como separador.
+- Possuem uma coluna chamada `CYCLES` (em maiúsculas).
+- Não contêm valores nulos (o script irá removê-los automaticamente, mas pode afetar a análise).
+
+### 3. Atualização do Dashboard
+Para que o novo benchmark apareça no menu suspenso do Dashboard:
+1. Abra o arquivo `dashboard.py`.
+2. Localize a lista `BENCHMARKS` (aproximadamente na linha 190).
+3. Adicione o nome da pasta do seu benchmark à lista.
+   ```python
+   BENCHMARKS = ['bs', 'cnt', '...', 'meu_novo_benchmark']
+   ```
+
+### 4. Processamento Batch (Opcional)
+Se desejar gerar as tabelas de métricas consolidadas para o novo benchmark via `script.py`:
+1. Edite as variáveis `PASTA_DADOS` e `PASTA_RESULTADOS` no `script.py` para apontar para os novos diretórios.
+
 ## 📊 Métricas Calculadas
 
 - **MI Global:** Informação mútua entre o evento e os ciclos de CPU.
