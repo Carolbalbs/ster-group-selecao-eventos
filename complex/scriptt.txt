@@ -1,0 +1,75 @@
+chmod a+x *.*  
+sudo ifconfig eth0 down
+
+taskset -c 0 ./script_interferencia
+taskset -c 0 ./script_
+
+aritmetica_mem.c
+memoria_salto.c
+
+gcc md5_n1_eventos.c -o md5_n1_eventos
+gcc md5_n2_eventos.c -o md5_n2_eventos
+gcc md5_n3_eventos.c -o md5_n3_eventos
+gcc md5_n4_eventos.c -o md5_n4_eventos
+gcc md5_n5_eventos.c -o md5_n5_eventos
+gcc md5_n6_eventos.c -o md5_n6_eventos
+gcc md5_n7_eventos.c -o md5_n7_eventos
+gcc md5_n8_eventos.c -o md5_n8_eventos
+gcc md5_n9_eventos.c -o md5_n9_eventos
+gcc md5_n10_eventos.c -o md5_n10_eventos
+
+gcc cubic_n1_eventos.c -o cubic_n1_eventos
+gcc cubic_n2_eventos.c -o cubic_n2_eventos
+gcc cubic_n3_eventos.c -o cubic_n3_eventos
+gcc cubic_n4_eventos.c -o cubic_n4_eventos
+gcc cubic_n5_eventos.c -o cubic_n5_eventos
+gcc cubic_n6_eventos.c -o cubic_n6_eventos
+gcc cubic_n7_eventos.c -o cubic_n7_eventos
+gcc cubic_n8_eventos.c -o cubic_n8_eventos
+gcc cubic_n9_eventos.c -o cubic_n9_eventos
+gcc cubic_n10_eventos.c -o cubic_n10_eventos
+
+gcc minver_n1_eventos.c -o minver_n1_eventos
+gcc minver_n2_eventos.c -o minver_n2_eventos
+gcc minver_n3_eventos.c -o minver_n3_eventos
+gcc minver_n4_eventos.c -o minver_n4_eventos
+gcc minver_n5_eventos.c -o minver_n5_eventos
+gcc minver_n6_eventos.c -o minver_n6_eventos
+gcc minver_n7_eventos.c -o minver_n7_eventos
+gcc minver_n8_eventos.c -o minver_n8_eventos
+gcc minver_n9_eventos.c -o minver_n9_eventos
+gcc minver_n10_eventos.c -o minver_n10_eventos
+
+gcc dijkstra_n1_eventos.c -o  dijkstra_n1_eventos
+gcc dijkstra_n2_eventos.c -o  dijkstra_n2_eventos
+gcc dijkstra_n3_eventos.c -o  dijkstra_n3_eventos
+gcc dijkstra_n4_eventos.c -o  dijkstra_n4_eventos
+gcc dijkstra_n5_eventos.c -o  dijkstra_n5_eventos
+gcc dijkstra_n6_eventos.c -o  dijkstra_n6_eventos
+gcc dijkstra_n7_eventos.c -o  dijkstra_n7_eventos
+gcc dijkstra_n8_eventos.c -o  dijkstra_n8_eventos
+gcc dijkstra_n9_eventos.c -o  dijkstra_n9_eventos
+gcc dijkstra_n10_eventos.c -o dijkstra_n10_eventos
+
+gcc countnegative_n1_eventos.c -o countnegative_n1_eventos
+gcc countnegative_n2_eventos.c -o countnegative_n2_eventos
+gcc countnegative_n3_eventos.c -o countnegative_n3_eventos
+gcc countnegative_n4_eventos.c -o countnegative_n4_eventos
+gcc countnegative_n5_eventos.c -o countnegative_n5_eventos
+gcc countnegative_n6_eventos.c -o countnegative_n6_eventos
+gcc countnegative_n7_eventos.c -o countnegative_n7_eventos
+gcc countnegative_n8_eventos.c -o countnegative_n8_eventos
+gcc countnegative_n9_eventos.c -o countnegative_n9_eventos
+gcc countnegative_n10_eventos.c -o countnegative_n10_eventos
+
+gcc complex_updates_n1_eventos.c -o complex_updates_n1_eventos  
+gcc complex_updates_n2_eventos.c -o complex_updates_n2_eventos  
+gcc complex_updates_n3_eventos.c -o complex_updates_n3_eventos  
+gcc complex_updates_n4_eventos.c -o complex_updates_n4_eventos  
+gcc complex_updates_n5_eventos.c -o complex_updates_n5_eventos  
+gcc complex_updates_n6_eventos.c -o complex_updates_n6_eventos  
+gcc complex_updates_n7_eventos.c -o complex_updates_n7_eventos  
+gcc complex_updates_n8_eventos.c -o complex_updates_n8_eventos  
+gcc complex_updates_n9_eventos.c -o complex_updates_n9_eventos  
+gcc complex_updates_n10_eventos.c -o complex_updates_n10_eventos  
+

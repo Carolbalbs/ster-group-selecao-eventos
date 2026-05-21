@@ -110,56 +110,65 @@ def calculate_metrics(df):
 
 # --- Event Mapping (ARM Cortex-A53) ---
 EVENT_GLOSSARY = {
-    '0x00': {'Mnemonic': 'SW_INCR', 'Description': 'Software increment. The register is incremented only on writes to the Software Increment Register.'},
-    '0x01': {'Mnemonic': 'L1I_CACHE_REFILL', 'Description': 'L1 Instruction cache refill.'},
-    '0x02': {'Mnemonic': 'L1I_TLB_REFILL', 'Description': 'L1 Instruction TLB refill.'},
-    '0x03': {'Mnemonic': 'L1D_CACHE_REFILL', 'Description': 'L1 Data cache refill.'},
-    '0x04': {'Mnemonic': 'L1D_CACHE', 'Description': 'L1 Data cache access.'},
-    '0x05': {'Mnemonic': 'L1D_TLB_REFILL', 'Description': 'L1 Data TLB refill.'},
-    '0x06': {'Mnemonic': 'LD_RETIRED', 'Description': 'Instruction architecturally executed, condition check pass - load.'},
-    '0x07': {'Mnemonic': 'ST_RETIRED', 'Description': 'Instruction architecturally executed, condition check pass - store.'},
-    '0x08': {'Mnemonic': 'INST_RETIRED', 'Description': 'Instruction architecturally executed.'},
-    '0x09': {'Mnemonic': 'EXC_TAKEN', 'Description': 'Exception taken.'},
-    '0x0A': {'Mnemonic': 'EXC_RETURN', 'Description': 'Exception return.'},
-    '0x0B': {'Mnemonic': 'CID_WRITE_RETIRED', 'Description': 'Change to Context ID retired.'},
-    '0x0C': {'Mnemonic': 'PC_WRITE_RETIRED', 'Description': 'Instruction architecturally executed, condition check pass, software change of the PC.'},
-    '0x0D': {'Mnemonic': 'BR_IMMED_RETIRED', 'Description': 'Instruction architecturally executed, immediate branch.'},
-    '0x0E': {'Mnemonic': 'BR_RETURN_RETIRED', 'Description': 'Instruction architecturally executed, condition code check pass, procedure return.'},
-    '0x0F': {'Mnemonic': 'UNALIGNED_LDST_RETIRED', 'Description': 'Instruction architecturally executed, condition check pass, unaligned load or store.'},
-    '0x10': {'Mnemonic': 'BR_MIS_PRED', 'Description': 'Mispredicted or not predicted branch speculatively executed.'},
-    '0x11': {'Mnemonic': 'CPU_CYCLES', 'Description': 'Cycle.'},
-    '0x12': {'Mnemonic': 'BR_PRED', 'Description': 'Predictable branch speculatively executed.'},
-    '0x13': {'Mnemonic': 'MEM_ACCESS', 'Description': 'Data memory access.'},
-    '0x14': {'Mnemonic': 'L1I_CACHE', 'Description': 'L1 Instruction cache access.'},
-    '0x15': {'Mnemonic': 'L1D_CACHE_WB', 'Description': 'L1 Data cache Write-Back.'},
-    '0x16': {'Mnemonic': 'L2D_CACHE', 'Description': 'L2 Data cache access.'},
-    '0x17': {'Mnemonic': 'L2D_CACHE_REFILL', 'Description': 'L2 Data cache refill.'},
-    '0x18': {'Mnemonic': 'L2D_CACHE_WB', 'Description': 'L2 Data cache Write-Back.'},
-    '0x19': {'Mnemonic': 'BUS_ACCESS', 'Description': 'Bus access.'},
-    '0x1A': {'Mnemonic': 'MEMORY_ERROR', 'Description': 'Local memory error.'},
-    '0x1D': {'Mnemonic': 'BUS_CYCLES', 'Description': 'Bus cycle.'},
-    '0x1E': {'Mnemonic': 'CHAIN', 'Description': 'Odd performance counter chain mode.'},
-    '0x60': {'Mnemonic': 'BUS_ACCESS_LD', 'Description': 'Bus access - Read.'},
-    '0x61': {'Mnemonic': 'BUS_ACCESS_ST', 'Description': 'Bus access - Write.'},
-    '0x7A': {'Mnemonic': 'BR_INDIRECT_SPEC', 'Description': 'Branch speculatively executed - Indirect branch.'},
-    '0x86': {'Mnemonic': 'EXC_IRQ', 'Description': 'Exception taken, IRQ.'},
-    '0x87': {'Mnemonic': 'EXC_FIQ', 'Description': 'Exception taken, FIQ.'},
-    '0xC0': {'Mnemonic': '-', 'Description': 'External memory request.'},
-    '0xC1': {'Mnemonic': '-', 'Description': 'Non-cacheable external memory request.'},
-    '0xC2': {'Mnemonic': '-', 'Description': 'Linefill because of prefetch.'},
-    '0xC3': {'Mnemonic': '-', 'Description': 'Instruction Cache Throttle occurred.'},
-    '0xC4': {'Mnemonic': '-', 'Description': 'Entering read allocate mode.'},
-    '0xC5': {'Mnemonic': '-', 'Description': 'Read allocate mode.'},
-    '0xC6': {'Mnemonic': '-', 'Description': 'Pre-decode error.'},
-    '0xC7': {'Mnemonic': '-', 'Description': 'Data Write operation that stalls the pipeline because the store buffer is full.'},
-    '0xC8': {'Mnemonic': '-', 'Description': 'SCU Snooped data from another CPU for this CPU.'},
-    '0xC9': {'Mnemonic': '-', 'Description': 'Conditional branch executed.'},
-    '0xCA': {'Mnemonic': '-', 'Description': 'Indirect branch mispredicted.'},
-    '0xCB': {'Mnemonic': '-', 'Description': 'Indirect branch mispredicted because of address miscompare.'},
-    '0xCC': {'Mnemonic': '-', 'Description': 'Conditional branch mispredicted.'},
-    '0xD0': {'Mnemonic': '-', 'Description': 'L1 Instruction Cache (data or tag) memory error.'},
-    '0xD1': {'Mnemonic': '-', 'Description': 'L1 Data Cache (data, tag or dirty) memory error.'},
-    '0xD2': {'Mnemonic': '-', 'Description': 'TLB memory error.'},
+    '0x00': {'Mnemonic': 'SW_INCR', 'Description': 'Software increment. O contador é incrementado apenas por escritas no registrador PMSWINC_EL0. Útil para marcar seções críticas ou eventos definidos pelo programador.'},
+    '0x01': {'Mnemonic': 'L1I_CACHE_REFILL', 'Description': 'L1 Instruction cache refill. Miss na cache de instrução L1. A CPU busca a linha na L2 ou DRAM. Alta taxa indica baixa localidade de código (loops grandes ou chamadas dispersas).'},
+    '0x02': {'Mnemonic': 'L1I_TLB_REFILL', 'Description': 'L1 Instruction TLB refill. Recarga do TLB de instruções L1 devido a miss no mapeamento virtual-físico. Comum após trocas de contexto ou código muito fragmentado.'},
+    '0x03': {'Mnemonic': 'L1D_CACHE_REFILL', 'Description': 'L1 Data cache refill. Miss na cache de dados L1. O dado deve ser buscado na L2 ou RAM. Causa pipeline stall e indica padrões de acesso não sequenciais ou working set grande.'},
+    '0x04': {'Mnemonic': 'L1D_CACHE', 'Description': 'L1 Data cache access. Conta todos os acessos (hits + misses) à cache L1D. Essencial para calcular a taxa de miss da cache de dados.'},
+    '0x05': {'Mnemonic': 'L1D_TLB_REFILL', 'Description': 'L1 Data TLB refill. Miss no TLB de dados L1, forçando um page table walk. Indica que os dados estão espalhados por muitas páginas virtuais.'},
+    '0x06': {'Mnemonic': 'LD_RETIRED', 'Description': 'Instruction architecturally executed, load. Instrução de carga (load) executada com sucesso. Mede a pressão de leitura de memória.'},
+    '0x07': {'Mnemonic': 'ST_RETIRED', 'Description': 'Instruction architecturally executed, store. Instrução de escrita (store) executada. Razões altas podem indicar uso intenso de escrita ou MMIO.'},
+    '0x08': {'Mnemonic': 'INST_RETIRED', 'Description': 'Instruction architecturally executed. Contador geral de instruções concluídas. Base para o cálculo de IPC (Instruções por Ciclo).'},
+    '0x09': {'Mnemonic': 'EXC_TAKEN', 'Description': 'Exception taken. Total de exceções tomadas (IRQ, FIQ, page faults, SVC, etc.). Alta frequência indica excesso de interrupções ou chamadas de sistema.'},
+    '0x0A': {'Mnemonic': 'EXC_RETURN', 'Description': 'Exception return. Execução da instrução de retorno de exceção (ERET).'},
+    '0x0B': {'Mnemonic': 'CID_WRITE_RETIRED', 'Description': 'Change to Context ID retired. Escritas no registrador de ID de contexto, típicas de trocas de processos pelo SO.'},
+    '0x0C': {'Mnemonic': 'PC_WRITE_RETIRED', 'Description': 'Software change of the PC. Mudanças de fluxo de controle via software (BR/BLR). Comum em dispatch tables e interpretadores.'},
+    '0x0D': {'Mnemonic': 'BR_IMMED_RETIRED', 'Description': 'Immediate branch executed. Branches com alvo fixo na instrução (B, BL, CBZ) executados.'},
+    '0x0E': {'Mnemonic': 'BR_RETURN_RETIRED', 'Description': 'Procedure return executed. Retornos de subrotina executados. O preditor usa o RAS (Return Address Stack) para este evento.'},
+    '0x0F': {'Mnemonic': 'UNALIGNED_LDST_RETIRED', 'Description': 'Unaligned load or store. Acessos a endereços não alinhados. Causam penalidade de performance pois são divididos em múltiplas operações internas.'},
+    '0x10': {'Mnemonic': 'BR_MIS_PRED', 'Description': 'Branch mispredicted. Branches malpreditos ou não preditos, resultando em descarte do pipeline e desperdício de ciclos (~8 ciclos no A53).'},
+    '0x11': {'Mnemonic': 'CPU_CYCLES', 'Description': 'Cycle. Ciclos de clock do processador. Denominador base para quase todas as métricas de performance.'},
+    '0x12': {'Mnemonic': 'BR_PRED', 'Description': 'Predictable branch speculatively executed. Branches predizíveis executados especulativamente.'},
+    '0x13': {'Mnemonic': 'MEM_ACCESS', 'Description': 'Data memory access. Qualquer acesso que gere requisição à hierarquia de memória (L1, L2, DRAM).'},
+    '0x14': {'Mnemonic': 'L1I_CACHE', 'Description': 'L1 Instruction cache access. Acessos totais à cache de instrução L1.'},
+    '0x15': {'Mnemonic': 'L1D_CACHE_WB', 'Description': 'L1 Data cache Write-Back. Escrita de linhas sujas (dirty) da L1 para a L2. Indica thrashing da L1 ou alto volume de escritas.'},
+    '0x16': {'Mnemonic': 'L2D_CACHE', 'Description': 'L2 Data cache access. Acessos à cache L2 unificada (dados e instruções).'},
+    '0x17': {'Mnemonic': 'L2D_CACHE_REFILL', 'Description': 'L2 Data cache refill. Miss na cache L2 exigindo acesso à memória principal (DRAM). Evento de altíssima latência.'},
+    '0x18': {'Mnemonic': 'L2D_CACHE_WB', 'Description': 'L2 Data cache Write-Back. Write-backs da L2 para a memória principal.'},
+    '0x19': {'Mnemonic': 'BUS_ACCESS', 'Description': 'Bus access. Transações que saem do cluster para memória externa ou periféricos via barramento AXI/ACE.'},
+    '0x1A': {'Mnemonic': 'MEMORY_ERROR', 'Description': 'Local memory error. Erros ECC nas caches. Indicador de falha de hardware ou interferência.'},
+    '0x1D': {'Mnemonic': 'BUS_CYCLES', 'Description': 'Bus cycle. Ciclos do barramento de memória, útil para medir largura de banda efetiva.'},
+    '0x1E': {'Mnemonic': 'CHAIN', 'Description': 'Odd performance counter chain mode. Encadeamento de contadores para formar um contador de 64 bits.'},
+    '0x60': {'Mnemonic': 'BUS_ACCESS_LD', 'Description': 'Bus access - Read. Acessos de leitura ao barramento de memória.'},
+    '0x61': {'Mnemonic': 'BUS_ACCESS_ST', 'Description': 'Bus access - Write. Acessos de escrita ao barramento de memória.'},
+    '0x7A': {'Mnemonic': 'BR_INDIRECT_SPEC', 'Description': 'Branch speculatively executed - Indirect branch. Branches indiretos (alvo em registrador) executados especulativamente.'},
+    '0x86': {'Mnemonic': 'EXC_IRQ', 'Description': 'Exception taken, IRQ. Interrupções de hardware de nível normal.'},
+    '0x87': {'Mnemonic': 'EXC_FIQ', 'Description': 'Exception taken, FIQ. Interrupções de hardware de alta prioridade.'},
+    '0xC0': {'Mnemonic': '-', 'Description': 'External memory request. Requisições enviadas para o controlador de memória externa (DRAM).'},
+    '0xC1': {'Mnemonic': '-', 'Description': 'Non-cacheable external memory request. Acessos a memória não-cacheável (MMIO/Periféricos).'},
+    '0xC2': {'Mnemonic': '-', 'Description': 'Linefill because of prefetch. Recargas de linha de cache disparadas pelo hardware prefetcher.'},
+    '0xC3': {'Mnemonic': '-', 'Description': 'Instruction Cache Throttle occurred. Pausa no fetch de instruções por fila de decodificação cheia.'},
+    '0xC4': {'Mnemonic': '-', 'Description': 'Entering read allocate mode. Transição para modo de alocação de leitura para evitar poluição da cache em streamings.'},
+    '0xC5': {'Mnemonic': '-', 'Description': 'Read allocate mode. Ciclos operando em modo de alocação de leitura.'},
+    '0xC6': {'Mnemonic': '-', 'Description': 'Pre-decode error. Erros de pré-decodificação na carga para L1I, forçando reinício do fetch.'},
+    '0xC7': {'Mnemonic': '-', 'Description': 'Store buffer full stall. Pipeline parado porque o store buffer está cheio (alta pressão de escrita).'},
+    '0xC8': {'Mnemonic': '-', 'Description': 'SCU Snooped data from another CPU. Dados obtidos da cache de outro núcleo via SCU (coerência de cache).'},
+    '0xC9': {'Mnemonic': '-', 'Description': 'Conditional branch executed. Branches condicionais (B.EQ, B.NE, etc.) executados.'},
+    '0xCA': {'Mnemonic': '-', 'Description': 'Indirect branch mispredicted. Erro de predição em branches indiretos (ponteiros de função/dispatch).'},
+    '0xCB': {'Mnemonic': '-', 'Description': 'Indirect branch mispredicted - address miscompare. Misprediction por discordância de endereço no alvo predito.'},
+    '0xCC': {'Mnemonic': '-', 'Description': 'Conditional branch mispredicted. Erro de predição em branches condicionais.'},
+    '0xD0': {'Mnemonic': '-', 'Description': 'L1 Instruction Cache memory error. Erros ECC na cache de instrução L1.'},
+    '0xD1': {'Mnemonic': '-', 'Description': 'L1 Data Cache memory error. Erros ECC na cache de dados L1.'},
+    '0xD2': {'Mnemonic': '-', 'Description': 'TLB memory error. Erros ECC nas estruturas do TLB.'},
+    '0xE0': {'Mnemonic': '-', 'Description': 'IQ empty - no identified stall cause. Frontend não fornece instruções por causa não categorizada.'},
+    '0xE1': {'Mnemonic': '-', 'Description': 'IQ empty - instruction cache miss. Ciclos de stall esperando recarga da cache de instrução (L1I miss).'},
+    '0xE2': {'Mnemonic': '-', 'Description': 'IQ empty - instruction TLB miss. Ciclos de stall esperando page table walk do TLB de instrução.'},
+    '0xE3': {'Mnemonic': '-', 'Description': 'IQ empty - pre-decode error. Ciclos de stall devido a erros de pré-decodificação.'},
+    '0xE4': {'Mnemonic': '-', 'Description': 'Interlock - not FP/SIMD or AGU. Stall por dependência de dados (RAW) em instruções inteiras.'},
+    '0xE5': {'Mnemonic': '-', 'Description': 'Interlock - load/store AGU. Stall porque o cálculo do endereço depende de instrução anterior.'},
+    '0xE6': {'Mnemonic': '-', 'Description': 'Interlock - Advanced SIMD or FP. Stall por dependência em instruções NEON ou Ponto Flutuante.'},
+    '0xE7': {'Mnemonic': '-', 'Description': 'Wr stage stall - load miss. Ciclos em que o pipeline aguarda um load miss ser resolvido na L2/DRAM.'},
+    '0xE8': {'Mnemonic': '-', 'Description': 'Wr stage stall - store. Stall no estágio de escrita, comumente por store buffer cheio.'},
 }
 
 # Transform glossary for DataTable
@@ -168,7 +177,7 @@ glossary_data = [{'Código': k, 'Mnemônico': v['Mnemonic'], 'Atividade/Descriç
 # --- Dashboard Setup ---
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 
-BENCHMARKS = ['bs', 'cnt', 'fibcall_perf_ite', 'matmult', 'msort']
+BENCHMARKS = ['bs', 'cnt', 'fibcall_perf_ite', 'matmult', 'msort','complex','count_negative','cubic','dijkstra','md5','miner']
 INTERVALS = ['intervalo1', 'intervalo2', 'intervalo3']
 
 app.layout = dbc.Container([
@@ -206,7 +215,12 @@ app.layout = dbc.Container([
                 html.Div(id='metrics-container', className="mt-3")
             ]),
             dbc.Tab(label="Visualização Temporal", children=[
-                dcc.Graph(id='time-series-plot', className="mt-3")
+                html.Div([
+                    html.Label("Selecione o Evento para o eixo X (Gráfico de Dispersão):"),
+                    dcc.Dropdown(id='event-x-select', className="mb-2")
+                ], className="mt-3"),
+                dcc.Graph(id='time-series-plot', className="mt-3"),
+                dcc.Graph(id='cycles-events-plot', className="mt-3")
             ]),
             dbc.Tab(label="Correlação", children=[
                 dcc.Graph(id='correlation-heatmap', className="mt-3")
@@ -252,23 +266,42 @@ def update_file_list(benchmark, interval):
     return options, value
 
 @app.callback(
+    Output('event-x-select', 'options'),
+    Output('event-x-select', 'value'),
+    Input('file-select', 'value')
+)
+def update_event_options(file_path):
+    if not file_path or not os.path.exists(file_path):
+        return [], None
+    try:
+        df = pd.read_csv(file_path, sep=';', nrows=0)
+        cols = [c.strip() for c in df.columns if c.strip() != 'CYCLES']
+        options = [{'label': c, 'value': c} for c in cols]
+        value = cols[0] if cols else None
+        return options, value
+    except:
+        return [], None
+
+@app.callback(
     Output('raw-data-container', 'children'),
     Output('metrics-container', 'children'),
     Output('time-series-plot', 'figure'),
+    Output('cycles-events-plot', 'figure'),
     Output('correlation-heatmap', 'figure'),
-    Input('file-select', 'value')
+    Input('file-select', 'value'),
+    Input('event-x-select', 'value')
 )
-def update_content(file_path):
+def update_content(file_path, selected_event):
     if not file_path or not os.path.exists(file_path):
         empty_fig = go.Figure()
         empty_fig.update_layout(title="Sem dados")
-        return "Selecione um arquivo", "Selecione um arquivo", empty_fig, empty_fig
+        return "Selecione um arquivo", "Selecione um arquivo", empty_fig, empty_fig, empty_fig
     
     try:
         df = pd.read_csv(file_path, sep=';')
         df.columns = df.columns.str.strip()
     except Exception as e:
-        return f"Erro ao ler arquivo: {e}", "", go.Figure(), go.Figure()
+        return f"Erro ao ler arquivo: {e}", "", go.Figure(), go.Figure(), go.Figure()
     
     # Table Raw
     raw_table = dash_table.DataTable(
@@ -300,12 +333,27 @@ def update_content(file_path):
         fig_ts.update_layout(xaxis_title="Amostra", yaxis_title="Cycles")
     else:
         fig_ts.update_layout(title="Coluna CYCLES não encontrada para visualização temporal")
+
+    # Cycles vs Selected Event
+    fig_ev = go.Figure()
+    if 'CYCLES' in df.columns:
+        df_num = df.apply(pd.to_numeric, errors='coerce').dropna()
+        if not df_num.empty:
+            if selected_event and selected_event in df_num.columns:
+                fig_ev = px.scatter(df_num, x=selected_event, y='CYCLES', title=f'CYCLES vs {selected_event}')
+                fig_ev.update_layout(xaxis_title=f"Número de Eventos ({selected_event})", yaxis_title="Cycles")
+            else:
+                fig_ev.update_layout(title="Selecione um evento válido para o eixo X")
+        else:
+            fig_ev.update_layout(title="Dados numéricos insuficientes")
+    else:
+        fig_ev.update_layout(title="Coluna CYCLES não encontrada")
     
     # Correlation
     try:
-        df_num = df.apply(pd.to_numeric, errors='coerce').dropna(axis=1, how='all').dropna()
-        if not df_num.empty and len(df_num.columns) > 1:
-            corr = df_num.corr()
+        df_num_corr = df.apply(pd.to_numeric, errors='coerce').dropna(axis=1, how='all').dropna()
+        if not df_num_corr.empty and len(df_num_corr.columns) > 1:
+            corr = df_num_corr.corr()
             fig_corr = px.imshow(corr, text_auto=".2f", aspect="auto", title="Matriz de Correlação")
         else:
             fig_corr = go.Figure()
@@ -314,8 +362,8 @@ def update_content(file_path):
         fig_corr = go.Figure()
         fig_corr.update_layout(title="Erro ao gerar matriz de correlação")
     
-    return raw_table, metrics_table, fig_ts, fig_corr
+    return raw_table, metrics_table, fig_ts, fig_ev, fig_corr
 
 if __name__ == '__main__':
     print("Iniciando Dashboard na porta 8050...")
-    app.run(debug=False, port=8050, host='0.0.0.0')
+    app.run(debug=False, port=8080, host='0.0.0.0')
