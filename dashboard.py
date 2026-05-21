@@ -176,6 +176,7 @@ glossary_data = [{'Código': k, 'Mnemônico': v['Mnemonic'], 'Atividade/Descriç
 
 # --- Dashboard Setup ---
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
+server = app.server
 
 BENCHMARKS = ['bs', 'cnt', 'fibcall_perf_ite', 'matmult', 'msort','complex','count_negative','cubic','dijkstra','md5','miner']
 INTERVALS = ['intervalo1', 'intervalo2', 'intervalo3']
@@ -365,5 +366,6 @@ def update_content(file_path, selected_event):
     return raw_table, metrics_table, fig_ts, fig_ev, fig_corr
 
 if __name__ == '__main__':
-    print("Iniciando Dashboard na porta 8050...")
-    app.run(debug=False, port=8080, host='0.0.0.0')
+    port = int(os.environ.get("PORT", 8050))
+    print(f"Iniciando Dashboard na porta {port}...")
+    app.run_server(debug=False, port=port, host='0.0.0.0')
