@@ -108,6 +108,79 @@ def calculate_metrics(df):
         
     return df_res
 
+# --- Color Palette ---
+COLOR_PALETTE = [
+    "#5C6BC0", "#42A5F5", "#26C6DA",
+    "#66BB6A", "#FFA726", "#EF5350",
+    "#AB47BC", "#26A69A", "#D4E157", "#FF7043",
+]
+
+def hex_to_rgba(hex_color, alpha=0.13):
+    h = hex_color.lstrip('#')
+    r, g, b = int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+    return f'rgba({r},{g},{b},{alpha})'
+
+# --- Temporal Events Figure ---
+def build_events_temporal_figure(df):
+    from plotly.subplots import make_subplots
+
+    event_cols = [c for c in df.columns if c != 'CYCLES']
+    if not event_cols:
+        fig = go.Figure()
+        fig.update_layout(title="Nenhum evento encontrado no arquivo")
+        return fig
+
+    df_num = df[event_cols].apply(pd.to_numeric, errors='coerce')
+    n = len(event_cols)
+
+    fig = make_subplots(
+        rows=n, cols=1,
+        shared_xaxes=True,
+        vertical_spacing=0.015,
+        subplot_titles=event_cols,
+    )
+
+    for i, evt in enumerate(event_cols):
+        color = COLOR_PALETTE[i % len(COLOR_PALETTE)]
+        y = df_num[evt].fillna(0).values
+        x = list(range(len(y)))
+
+        fig.add_trace(
+            go.Scatter(
+                x=x, y=y,
+                name=evt,
+                mode="lines",
+                line=dict(color=color, width=0.8),
+                fill="tozeroy",
+                fillcolor=hex_to_rgba(color),
+                hovertemplate=f"<b>{evt}</b><br>Amostra: %{{x}}<br>Valor: %{{y:.0f}}<extra></extra>",
+            ),
+            row=i + 1, col=1,
+        )
+
+    fig.update_layout(
+        title="Evolução Temporal de Eventos",
+        height=max(400, n * 130),
+        paper_bgcolor="white",
+        plot_bgcolor="#F0F4FF",
+        showlegend=False,
+        margin=dict(l=60, r=20, t=50, b=40),
+        font=dict(family="Inter, Arial, sans-serif", size=11),
+    )
+
+    fig.update_xaxes(showgrid=True, gridcolor="rgba(100,100,200,0.15)")
+    fig.update_xaxes(title_text="Amostra", row=n, col=1)
+    fig.update_yaxes(showgrid=True, gridcolor="rgba(100,100,200,0.15)", zeroline=False)
+
+    for i, ann in enumerate(fig.layout.annotations):
+        ann.font.color = COLOR_PALETTE[i % len(COLOR_PALETTE)]
+        ann.font.size = 11
+        ann.x = 0
+        ann.xanchor = "left"
+
+    return fig
+
+
 # --- Event Mapping (ARM Cortex-A53) ---
 EVENT_GLOSSARY = {
     '0x00': {'Mnemonic': 'SW_INCR', 'Description': 'Software increment. The register is incremented only on writes to the Software Increment Register.'},
@@ -169,7 +242,7 @@ glossary_data = [{'Código': k, 'Mnemônico': v['Mnemonic'], 'Atividade/Descriç
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 
 BENCHMARKS = ['bs', 'cnt', 'fibcall_perf_ite', 'matmult', 'msort']
-INTERVALS = ['intervalo1', 'intervalo2', 'intervalo3']
+INTERVALS = ['repeticao1', 'repeticao2', 'repeticao3']
 
 app.layout = dbc.Container([
     dbc.Row([
@@ -186,7 +259,7 @@ app.layout = dbc.Container([
             dcc.Dropdown(id='benchmark-select', options=[{'label': b, 'value': b} for b in BENCHMARKS], value='bs')
         ], width=3),
         dbc.Col([
-            html.Label("Intervalo:"),
+            html.Label("Repetição:"),
             dcc.Dropdown(id='interval-select', options=[{'label': i, 'value': i} for i in INTERVALS], value='intervalo1')
         ], width=3),
         dbc.Col([
@@ -206,7 +279,9 @@ app.layout = dbc.Container([
                 html.Div(id='metrics-container', className="mt-3")
             ]),
             dbc.Tab(label="Visualização Temporal", children=[
-                dcc.Graph(id='time-series-plot', className="mt-3")
+                dcc.Graph(id='events-temporal-plot', className="mt-3"),
+                html.Hr(),
+                dcc.Graph(id='time-series-plot', className="mt-3"),
             ]),
             dbc.Tab(label="Correlação", children=[
                 dcc.Graph(id='correlation-heatmap', className="mt-3")
@@ -254,6 +329,7 @@ def update_file_list(benchmark, interval):
 @app.callback(
     Output('raw-data-container', 'children'),
     Output('metrics-container', 'children'),
+    Output('events-temporal-plot', 'figure'),
     Output('time-series-plot', 'figure'),
     Output('correlation-heatmap', 'figure'),
     Input('file-select', 'value')
@@ -262,13 +338,13 @@ def update_content(file_path):
     if not file_path or not os.path.exists(file_path):
         empty_fig = go.Figure()
         empty_fig.update_layout(title="Sem dados")
-        return "Selecione um arquivo", "Selecione um arquivo", empty_fig, empty_fig
+        return "Selecione um arquivo", "Selecione um arquivo", empty_fig, empty_fig, empty_fig
     
     try:
         df = pd.read_csv(file_path, sep=';')
         df.columns = df.columns.str.strip()
     except Exception as e:
-        return f"Erro ao ler arquivo: {e}", "", go.Figure(), go.Figure()
+        return f"Erro ao ler arquivo: {e}", "", go.Figure(), go.Figure(), go.Figure()
     
     # Table Raw
     raw_table = dash_table.DataTable(
@@ -314,7 +390,10 @@ def update_content(file_path):
         fig_corr = go.Figure()
         fig_corr.update_layout(title="Erro ao gerar matriz de correlação")
     
-    return raw_table, metrics_table, fig_ts, fig_corr
+    # Temporal events subplots
+    fig_temporal = build_events_temporal_figure(df)
+
+    return raw_table, metrics_table, fig_temporal, fig_ts, fig_corr
 
 if __name__ == '__main__':
     print("Iniciando Dashboard na porta 8050...")
