@@ -9,8 +9,8 @@ import glob
 # CONFIGURAÇÕES
 # =====================================================================
 
-PASTA_DADOS = './msort/msort_perf/n_eventos/intervalo3/' # Coloque aqui os seus 10 ficheiros CSV originais do msort
-PASTA_RESULTADOS = './msort/msort_perf/n_eventos/intervalo3/estudo_metricas'
+PASTA_DADOS = './msort/msort_perf/n_eventos/repeticao3/' # Coloque aqui os seus 10 ficheiros CSV originais do msort
+PASTA_RESULTADOS = './msort/msort_perf/n_eventos/repeticao3/estudo_metricas'
 
 if not os.path.exists(PASTA_RESULTADOS):
     os.makedirs(PASTA_RESULTADOS)

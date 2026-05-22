@@ -243,7 +243,7 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 server = app.server
 
 BENCHMARKS = ['bs', 'cnt', 'complex', 'count_negative', 'cubic', 'dijkstra', 'fibcall_perf_ite', 'matmult', 'md5', 'miner', 'msort']
-INTERVALS = ['intervalo1', 'intervalo2', 'intervalo3']
+INTERVALS = ['repeticao1', 'repeticao2', 'repeticao2']
 
 app.layout = dbc.Container([
     dbc.Row([
@@ -261,7 +261,7 @@ app.layout = dbc.Container([
         ], width=3),
         dbc.Col([
             html.Label("Repetição:"),
-            dcc.Dropdown(id='interval-select', options=[{'label': i, 'value': i} for i in INTERVALS], value='intervalo1')
+            dcc.Dropdown(id='interval-select', options=[{'label': i, 'value': i} for i in INTERVALS], value='repeticao1')
         ], width=3),
         dbc.Col([
             html.Label("Arquivo:"),
