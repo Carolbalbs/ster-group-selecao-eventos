@@ -240,9 +240,10 @@ glossary_data = [{'Código': k, 'Mnemônico': v['Mnemonic'], 'Atividade/Descriç
 
 # --- Dashboard Setup ---
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
+server = app.server
 
-BENCHMARKS = ['bs', 'cnt', 'fibcall_perf_ite', 'matmult', 'msort']
-INTERVALS = ['repeticao1', 'repeticao2', 'repeticao3']
+BENCHMARKS = ['bs', 'cnt', 'complex', 'count_negative', 'cubic', 'dijkstra', 'fibcall_perf_ite', 'matmult', 'md5', 'miner', 'msort']
+INTERVALS = ['intervalo1', 'intervalo2', 'intervalo3']
 
 app.layout = dbc.Container([
     dbc.Row([
