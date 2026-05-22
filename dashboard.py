@@ -397,4 +397,4 @@ def update_content(file_path):
 
 if __name__ == '__main__':
     print("Iniciando Dashboard na porta 8050...")
-    app.run(debug=False, port=8050, host='0.0.0.0')
+    app.run_server(debug=False, port=8050, host='0.0.0.0')
