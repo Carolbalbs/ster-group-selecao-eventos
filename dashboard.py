@@ -136,8 +136,8 @@ def build_events_temporal_figure(df):
     fig = make_subplots(
         rows=n, cols=1,
         shared_xaxes=True,
-        vertical_spacing=0.015,
-        subplot_titles=event_cols,
+        vertical_spacing=0.04,
+        # sem subplot_titles — usamos yaxis title rotacionado
     )
 
     for i, evt in enumerate(event_cols):
@@ -158,25 +158,33 @@ def build_events_temporal_figure(df):
             row=i + 1, col=1,
         )
 
+        # Nome do evento como título do eixo Y — fica vertical à esquerda
+        yaxis_key = "yaxis" if i == 0 else f"yaxis{i + 1}"
+        fig.update_layout(**{
+            yaxis_key: dict(
+                title=dict(
+                    text=evt,
+                    font=dict(color=color, size=11),
+                    standoff=8,
+                ),
+                showgrid=True,
+                gridcolor="rgba(100,100,200,0.15)",
+                zeroline=False,
+            )
+        })
+
     fig.update_layout(
         title="Evolução Temporal de Eventos",
         height=max(400, n * 130),
         paper_bgcolor="white",
         plot_bgcolor="#F0F4FF",
         showlegend=False,
-        margin=dict(l=60, r=20, t=50, b=40),
+        margin=dict(l=80, r=20, t=50, b=40),
         font=dict(family="Inter, Arial, sans-serif", size=11),
     )
 
     fig.update_xaxes(showgrid=True, gridcolor="rgba(100,100,200,0.15)")
     fig.update_xaxes(title_text="Amostra", row=n, col=1)
-    fig.update_yaxes(showgrid=True, gridcolor="rgba(100,100,200,0.15)", zeroline=False)
-
-    for i, ann in enumerate(fig.layout.annotations):
-        ann.font.color = COLOR_PALETTE[i % len(COLOR_PALETTE)]
-        ann.font.size = 11
-        ann.x = 0
-        ann.xanchor = "left"
 
     return fig
 
